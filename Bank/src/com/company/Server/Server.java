@@ -1,43 +1,41 @@
 package com.company.Server;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-
     private final static int Port = 8999;
-
     public static void main(String[] args) {
         try (ServerSocket ServerSocket = new ServerSocket(Port)) {
             System.out.println("Сервер запущен");
+            String ch="";
+            dbWorker worker = new dbWorker();
 
-            try {
-                String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
-                String username = "root";
-                String password = "iLexus2002";
-                Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-                try (Connection conn = DriverManager.getConnection(url, username, password)) {
+            while (!ServerSocket.isClosed()) {
+                Socket Client = ServerSocket.accept();
 
-                    System.out.println("Connection to Store DB succesfull!");
+                DataOutputStream Writer = new DataOutputStream(Client.getOutputStream());
+                DataInputStream Reader = new DataInputStream(Client.getInputStream());
+                String message_ch = Reader.readUTF();
 
+                switch (message_ch) {
+                    case "1":{
 
+                        break;}
 
-
-
-
-
+                    default:{break;}
                 }
-            } catch (Exception ex) {
-                System.out.println("Connection failed...");
 
-                System.out.println(ex);
-            }
 
-        } catch (IOException exception) {
-            System.out.println(exception.getMessage());
+
+
+                    Writer.writeUTF("3");
+                    Writer.flush();
+                }
+            } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             System.exit(0);
         }
